@@ -43,6 +43,7 @@ from colorama import Style,Fore
 from datetime import datetime
 colorama.init()
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+open(f"MembersID.txt","a")
 token = open("stoken.txt","r").read()
 adminid = open("sid.txt","r").read()
 def RandomString(n=10):
@@ -97,7 +98,7 @@ class ServicesBot:
     def run(self):
         @self.bot.message_handler(content_types=['text'])
         def Button(message):
-            if str(message.chat.id) == self.AdminID:
+            if str(message.chat.id) in [uid for uid in open('MembersID.txt','r').read().splitlines()] or str(message.chat.id) == self.AdminID:
                 try:
                     if message.text == "/start" or message.text == "start":
                         if str(message.chat.id) == self.AdminID:
@@ -105,7 +106,14 @@ class ServicesBot:
                             self.key.row('Reset','Remove Biography')
                             self.key.row('Accept Terms','Accept Dismiss')
                             self.key.row('Regex for user:pass','Regex for Session-iD')
+                            self.key.row("Settings")
                             self.bot.send_message(message.chat.id,text=f"[mfr](https://www.instagram.com/cmfr)"+"* ServicesBot.*",parse_mode='markdown',reply_to_message_id=message.message_id,reply_markup=self.key)
+                        else:
+                            self.key = types.ReplyKeyboardMarkup(True).row('Session Info')
+                            self.key.row('Reset','Remove Biography')
+                            self.key.row('Accept Terms','Accept Dismiss')
+                            self.key.row('Regex for user:pass','Regex for Session-iD')
+                            self.bot.send_message(message.chat.id,text=f"*Welcome, Member to *"+"[cmfr](https://www.instagram.com/cmfr)"+"* ServicesBot.*",parse_mode='markdown',reply_to_message_id=message.message_id,reply_markup=self.key)
                     elif message.text == "Remove Biography":
                         sent = self.bot.send_message(message.chat.id,text="*Now, send Session-iD ?*",parse_mode="markdown",reply_to_message_id=message.message_id,reply_markup=self.enough)
                         self.bot.register_next_step_handler(sent,self.RemoveBio)
@@ -127,7 +135,30 @@ class ServicesBot:
                     elif message.text == "Regex for Session-iD":
                         sent = self.bot.send_message(message.chat.id, "send order.txt file to filter to sessionid.")
                         self.bot.register_next_step_handler(sent, self.set_input_for_regex, filename="Sessions-{0}.txt".format(RandomNum()), key="Regex for sessionid")
-
+                    elif message.text == "Add Member [ID]":
+                        if str(message.chat.id) == self.AdminID:
+                            sent = self.bot.send_message(message.chat.id,text="*Now, send iD ?*",parse_mode="markdown",reply_to_message_id=message.message_id,reply_markup=self.enough)
+                            self.bot.register_next_step_handler(sent,self.AddID)
+                    elif message.text == "Broadcast":
+                        if str(message.chat.id) == self.AdminID:
+                            sent = self.bot.send_message(message.chat.id,text="*Now, send broadcast message ?*",parse_mode="markdown",reply_to_message_id=message.message_id,reply_markup=self.enough)
+                            self.bot.register_next_step_handler(sent,self.Broadcast)
+                    elif message.text == "Remove Member [ID]":
+                        if str(message.chat.id) == self.AdminID:
+                            sent = self.bot.send_message(message.chat.id,text="*Now, send iD ?*",parse_mode="markdown",reply_to_message_id=message.message_id,reply_markup=self.enough)
+                            self.bot.register_next_step_handler(sent,self.RemoveID)
+                    elif message.text == "Settings" and str(message.chat.id) == self.AdminID:
+                        self.setting = types.ReplyKeyboardMarkup(True).row('Add Member [ID]','Remove Member [ID]')
+                        self.setting.row('Broadcast')
+                        self.setting.row('Back')
+                        self.bot.send_message(message.chat.id,text=f"*[Admin] Settings :*",parse_mode='markdown',reply_to_message_id=message.message_id,reply_markup=self.setting)
+                    elif message.text == "Back" and str(message.chat.id) == self.AdminID:
+                        self.key = types.ReplyKeyboardMarkup(True).row('Session Info')
+                        self.key.row('Reset','Remove Biography')
+                        self.key.row('Accept Terms','Accept Dismiss')
+                        self.key.row('Regex for user:pass','Regex for Session-iD')
+                        self.key.row("Settings")
+                        self.bot.send_message(message.chat.id,text=f"[mfr](https://www.instagram.com/cmfr)"+"* ServicesBot.*",parse_mode='markdown',reply_to_message_id=message.message_id,reply_markup=self.key)
                 except Exception as e:
                     print(str(e))
                     edit = self.bot.send_message(message.chat.id,text=f"*Invalid Button .*",parse_mode='markdown',reply_to_message_id=message.message_id)
@@ -140,24 +171,7 @@ class ServicesBot:
             if call.data == "enough":
                 self.bot.clear_step_handler_by_chat_id(call.message.chat.id)
                 self.bot.send_message(call.message.chat.id,"*Entry has been cancelled .*",parse_mode="markdown",reply_to_message_id=call.message.message_id)
-            elif call.data == "stop":
-                with threading.Lock():
-                    self.Run = False
-                    self.bot.edit_message_text("𝖽𝗈𝗇𝖾 𝗌𝗍𝗈𝗉𝗉𝖾𝖽 𝖻𝗈𝗍 🤖",edit.chat.id,edit.message_id,parse_mode="markdown")
-                    try:
-                        self.bot.send_document(call.message.chat.id,open(f'Grabbed-{call.message.chat.id}.txt','rb'),reply_to_message_id=call.message.message_id)
-                        os.remove(f'Grabbed-{call.message.chat.id}.txt')
-                    except:pass
-                    try:
-                        os.remove(f'Accounts-{call.message.chat.id}.txt')
-                    except:pass
-                    try:
-                        self.bot.send_document(call.message.chat.id,open(f'Checked-{call.message.chat.id}.txt','rb'),reply_to_message_id=call.message.message_id)
-                        os.remove(f'Checked-{call.message.chat.id}.txt')
-                    except:pass
-                    try:
-                        os.remove(f'Sessions-{call.message.chat.id}.txt')
-                    except:pass
+            
     def CheckSession(self,message, key=str):
         self.sid = message.text
         edit = self.bot.send_message(message.chat.id,text="*Checking Session-iD ... ♻️*",parse_mode="markdown",reply_to_message_id=message.message_id)
@@ -169,6 +183,7 @@ class ServicesBot:
             self.name = self.current_user.json()['user']['full_name']
             self.email = self.current_user.json()['user']['email']
             self.phone = self.current_user.json()['user']['phone_number']
+            self.trusted = self.current_user.json()['user']['trusted_username']
             self.bot.edit_message_text(f"*Done Login as @*"+f'[{self.username}](https://www.instagram.com/{self.username})'+"* .*",edit.chat.id,edit.message_id,parse_mode="markdown")
             if key == "Getinfo":
                 return self.username,self.bio,self.name,self.email,self.phone
@@ -177,6 +192,7 @@ class ServicesBot:
                 info = (
                         f"Session Info [Good]:\n"
                         f"Username: @{self.username}\n"
+                        f"Trusted-User: @{self.trusted}\n"
                         f"Name: {self.name}\n"
                         f"Email: {self.email}\n"
                         f"Phone Number: {self.phone}\n"
@@ -191,6 +207,8 @@ class ServicesBot:
             elif challenge_url == "https://www.instagram.com/accounts/suspended/":
                 self.bot.edit_message_text(f"*Account is Suspended.*",edit.chat.id,edit.message_id,parse_mode="markdown")
         elif self.current_user.status_code == 403:
+            self.bot.edit_message_text(f"*Session-iD is invalid .*",edit.chat.id,edit.message_id,parse_mode="markdown")
+        else:
             self.bot.edit_message_text(f"*Session-iD is invalid .*",edit.chat.id,edit.message_id,parse_mode="markdown")
     def RemoveBio(self,message):
         self.sid = message.text
@@ -250,7 +268,6 @@ class ServicesBot:
                         sessionid_part = line.split("=")[4].split(";")[0]
                         formatted_lines.append(sessionid_part)
                     except IndexError:
-                        # Skip invalid lines
                         continue
 
             # Write the formatted lines to the file
@@ -275,7 +292,26 @@ class ServicesBot:
             self.bot.edit_message_text(f"*Done accepted challenge .*",edit.chat.id,edit.message_id,parse_mode="markdown")
         else:
             self.bot.edit_message_text(f"*Fail accepted challenge . Reson: {s}*",edit.chat.id,edit.message_id,parse_mode="markdown")
-
+    def AddID(self,message):
+        self.id = message.text
+        with open("MembersID.txt","a") as a:
+            a.write(f"{self.id}\n")
+        self.bot.send_message(message.chat.id,text="*Done Add New Member [ID] ✅*",parse_mode="markdown",reply_to_message_id=message.message_id)
+    def RemoveID(self,message):
+        self.id = message.text
+        with open("MembersID.txt", "r+") as file:
+            lines = file.readlines()
+            filtered_lines = [line for line in lines if line != (self.id + "\n")]
+            file.seek(0)
+            file.truncate(0)
+            file.writelines(filtered_lines)
+        self.bot.send_message(message.chat.id,text="*Done Remove Member [ID] ✅*",parse_mode="markdown",reply_to_message_id=message.message_id)
+    def Broadcast(self,message):
+        self.msg = message.text
+        edit = self.bot.send_message(message.chat.id,text="*[Broadcast] sending message ... ♻️*",parse_mode="markdown")
+        for uid in open('MembersID.txt','r').read().splitlines():
+            self.bot.send_message(uid,text=self.msg,parse_mode="markdown")
+        self.bot.send_message(message.chat.id,text="*[Broadcast] Done sent message ✅*",parse_mode="markdown",reply_to_message_id=message.message_id)
 def document(message: types.Message) -> str:
     if message.document.mime_type == 'text/plain':
         File = requests.get('https://api.telegram.org/bot{0}/getFile?file_id={1}'.format(token, message.document.file_id)).json()['result']['file_path']
@@ -313,7 +349,8 @@ def accept_challenge(session_obj, challenge_url: str):
         match = re.search(r'\\"([^\\"]+)\\"\, \(bk\.action\.i32\.Const, 0\)\)\)', text)
         if match:
             challenge_context = match.group(1)
-            take_challenge(session_obj, challenge_context)
+            x= take_challenge(session_obj, challenge_context)
+            return x
         else:
             return "No match found. // this is not challenge error"
     else:
