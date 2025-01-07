@@ -1,5 +1,5 @@
 import os,string
-os.system('title,@cmfr Bot .')
+os.system('title,@23336 Bot .')
 os.system("mode 60,20")
 def clear():
     os.system("clear || cls")
@@ -107,13 +107,13 @@ class ServicesBot:
                             self.key.row('Accept Terms','Accept Dismiss')
                             self.key.row('Regex for user:pass','Regex for Session-iD')
                             self.key.row("Settings")
-                            self.bot.send_message(message.chat.id,text=f"[mfr](https://www.instagram.com/cmfr)"+"* ServicesBot.*",parse_mode='markdown',reply_to_message_id=message.message_id,reply_markup=self.key)
+                            self.bot.send_message(message.chat.id,text=f"[23336](https://www.instagram.com/23336o)"+"* ServicesBot.*",parse_mode='markdown',reply_to_message_id=message.message_id,reply_markup=self.key)
                         else:
                             self.key = types.ReplyKeyboardMarkup(True).row('Session Info')
                             self.key.row('Reset','Remove Biography')
                             self.key.row('Accept Terms','Accept Dismiss')
                             self.key.row('Regex for user:pass','Regex for Session-iD')
-                            self.bot.send_message(message.chat.id,text=f"*Welcome, Member to *"+"[cmfr](https://www.instagram.com/cmfr)"+"* ServicesBot.*",parse_mode='markdown',reply_to_message_id=message.message_id,reply_markup=self.key)
+                            self.bot.send_message(message.chat.id,text=f"*Welcome, Member to *"+"[23336](https://www.instagram.com/23336o)"+"* ServicesBot.*",parse_mode='markdown',reply_to_message_id=message.message_id,reply_markup=self.key)
                     elif message.text == "Remove Biography":
                         sent = self.bot.send_message(message.chat.id,text="*Now, send Session-iD ?*",parse_mode="markdown",reply_to_message_id=message.message_id,reply_markup=self.enough)
                         self.bot.register_next_step_handler(sent,self.RemoveBio)
@@ -158,13 +158,13 @@ class ServicesBot:
                         self.key.row('Accept Terms','Accept Dismiss')
                         self.key.row('Regex for user:pass','Regex for Session-iD')
                         self.key.row("Settings")
-                        self.bot.send_message(message.chat.id,text=f"[mfr](https://www.instagram.com/cmfr)"+"* ServicesBot.*",parse_mode='markdown',reply_to_message_id=message.message_id,reply_markup=self.key)
+                        self.bot.send_message(message.chat.id,text=f"[23336](https://www.instagram.com/23336o)"+"* ServicesBot.*",parse_mode='markdown',reply_to_message_id=message.message_id,reply_markup=self.key)
                 except Exception as e:
                     print(str(e))
                     edit = self.bot.send_message(message.chat.id,text=f"*Invalid Button .*",parse_mode='markdown',reply_to_message_id=message.message_id)
                     self.bot.edit_message_text('*choose a valid button ./start*',edit.chat.id,edit.message_id,parse_mode='markdown')
             else:
-                self.bot.send_message(message.chat.id,text=f"*Plz dm if you want use it > *"+"[mfr](https://www.instagram.com/cmfr)"+f"*\nMembership iD : *"+f"`{message.chat.id}`",parse_mode='markdown',reply_to_message_id=message.message_id)
+                self.bot.send_message(message.chat.id,text=f"*Plz dm if you want use it > *"+"[23336](https://www.instagram.com/23336o)"+f"*\nMembership iD : *"+f"`{message.chat.id}`",parse_mode='markdown',reply_to_message_id=message.message_id)
         @self.bot.callback_query_handler(func=lambda call: True)
         def callback(call):
             global edit
